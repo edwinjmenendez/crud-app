@@ -6,11 +6,7 @@ const getReminders = () => {
     const list = document.getElementById('list');
     list.innerHTML = ''; // reset the length of the list so it doesnt keep adding
     reminders.forEach(reminder => {
-      const newLi = document.createElement('li') // creates a new <li></li>
-      newLi.id = reminder._id // creates id attribute to newLi and assign it to id from db
-      newLi.innerText = reminder.text // sets the text inside of <li> to the text value from db
-      list.appendChild(newLi) // appends the newLi into the list element 
-
+      addItem(reminder)
     })
   })
   .catch(err => console.log('error in fetching reminders:', err))
@@ -34,7 +30,32 @@ document.getElementById('reminderInput').addEventListener('submit', (e) => {
   })
   .then(response => response.json())
   .then(reminder => {
-    getReminders()
+    reminderText.value = ''; // reset text value
+    addItem(reminder)
   })
   .catch(err => console.log(err))
 })
+
+const addItem = (reminder) => {
+  const newLi = document.createElement('li') // creates a new <li></li>
+  newLi.id = reminder._id // creates id attribute to newLi and assign it to id from db
+  newLi.innerText = reminder.text // sets the text inside of <li> to the text value from db
+  const button = document.createElement('button')
+  button.innerText = 'DELETE'
+  button.addEventListener('click', () => {
+    fetch(`/reminders/${reminder._id}`, {
+      method: 'DELETE',
+    })
+    .then(res => res.json()) // or res.json()
+    .then(res => {
+      console.log(res)
+      document.getElementById('list').removeChild(newLi);
+    })
+    .catch(err => console.log(err))
+  })
+  newLi.appendChild(button);
+  list.appendChild(newLi) // appends the newLi into the list element 
+}
+
+
+// make fetch request to delete a reminder to the list

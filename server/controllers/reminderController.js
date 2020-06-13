@@ -8,7 +8,7 @@ reminderController.addReminder = (req, res, next) => { // cant display each add 
   const queryStr = `INSERT INTO reminders (text) VALUES ($1) RETURNING *;`;
   db.query(queryStr, params)
   .then((reminderData) => {
-    console.log(reminderData)
+    // console.log(reminderData)
     res.locals.reminders = reminderData.rows[0];
     return next();
   })
