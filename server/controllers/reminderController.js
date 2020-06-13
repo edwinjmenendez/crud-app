@@ -34,7 +34,19 @@ reminderController.getReminder = (req, res, next) => {
 }
 
 reminderController.deleteReminder = (req, res, next) => {
-
+  console.log('deleteReminders middlware')
+  const { id } = req.params;
+  const params = [ id ];
+  const queryStr = `DELETE FROM reminders WHERE _id=$1 RETURNING *`
+  db.query(queryStr, params)
+  .then(reminderData => {
+    res.locals.reminders = reminderData.rows[0];
+    return next();
+  })
+  .catch(err => {
+    console.log(err)
+    return next(err);
+  })
 }
 
 module.exports = reminderController;
