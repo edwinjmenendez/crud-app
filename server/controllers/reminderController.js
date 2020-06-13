@@ -19,7 +19,18 @@ reminderController.addReminder = (req, res, next) => { // cant display each add 
 }
 
 reminderController.getReminder = (req, res, next) => {
-
+  console.log('getReminders middlware');
+  console.log(req.body);
+  const queryStr = `SELECT * FROM reminders;`;
+  db.query(queryStr)
+  .then(reminderData => {
+    res.locals.reminders = reminderData.rows;
+    return next();
+  })
+  .catch(err => {
+    console.log(err);
+    return next(err);
+  })
 }
 
 reminderController.deleteReminder = (req, res, next) => {
