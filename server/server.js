@@ -3,17 +3,18 @@ const path = require('path'); // require the path
 const app = express(); // have a variable to invoke express
 const PORT = 3000; // have a port to be listening on
 
+const reminders = require('./controllers/reminderController'); // after setting up the controller, add routes to each middleware
 app.use(express.json()); // convert everything to json
 
 // add potential routes to our server
-app.get('/reminders', (req, res) => {
-  // return res.status(200) and send the response
+app.get('/reminders', reminders.getReminder, (req, res) => {
+  return res.status(200).json(res.locals.reminders);
 })
-app.post('/reminders', (req, res) => {
-  // return res.status(200) and send the response
+app.post('/reminders', reminders.addReminder, (req, res) => {
+  return res.status(200).json(res.locals.reminders);
 })
-app.delete('/reminders/:id', (req, res) => {  // <-- deletes specific id
-  // return res.status(200) and send the response
+app.delete('/reminders/:id', reminders.deleteReminder, (req, res) => {  // <-- deletes specific id
+  return res.status(200).json(res.locals.reminders);
 })
 
 // add error handlers
